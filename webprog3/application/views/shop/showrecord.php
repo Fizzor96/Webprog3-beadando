@@ -10,7 +10,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title><?=$title?></title>
+    <title>Detail</title>
 </head>
 <body>
 
@@ -21,10 +21,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
         <ul class="nav navbar-nav">
         <li><a href="<?=base_url('welcome')?>">Home</a></li>
-        <li><a href="<?=base_url('campus/list')?>">Campusok</a></li>
-        <li><a href="<?=base_url('building/list')?>">Epuletek</a></li>
-        <li><a href="<?=base_url('welcome')?>">Shop</a></li>
         <?php if($this->ion_auth->logged_in()): ?>
+            <li><a href="<?=base_url('shop/list')?>">Shop</a></li>
         <li><a href="<?=base_url('welcome')?>">Wishlist</a></li>
         <li><a href="<?=base_url('welcome')?>">Library</a></li>
         <li><a href="<?=base_url('welcome')?>">Users</a></li>
@@ -42,55 +40,43 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </div>
     </nav>
     
-    <?php if($records == null || empty($records)) : ?>
-        <?php if(!empty($errors)) :  ?>
-            <?php foreach($errors as &$error) : ?>
-                <p><?=$error?></p>
-            <?php endforeach; ?>
-        <?php endif; ?>
-        <?php $this->session->unset_userdata('errors'); ?>
-        <p>Nincs rogzitve egyetlen campus sem<br>
-        <a href="<?=base_url('campus/insert')?>"><button class='btn btn-primary'>New Record</button></a></p>
-    <?php else: ?>
     <div class="container">
-        <?php if(!empty($errors)) :  ?>
-            <?php foreach($errors as &$error) : ?>
-                <p><?=$error?></p>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    <?php $this->session->unset_userdata('errors'); ?>
-    <h2><a href="<?=base_url('campus/insert')?>"><button class='btn btn-primary'>New Record</button></a><br><br>
-    <?=$title?></h2>
+    <a href="<?=base_url('shop/list')?>"><button class='btn btn-primary'>Back</button></a>
+    <br><br>
     <table class="table">
         <thead>
         <tr>
-            <th>Azonosito</th>
-            <th>Nev</th>
-            <th>Leiras</th>
-            <th>Aktiv</th>
-            <th>Muveletek</th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Publisher</th>
+            <th>Description</th>
+            <th>Cost</th>
         </tr>
         </thead>
         <tbody>
-        <?php foreach($records as $record) : ?>
         <tr>
-            <td><?=$record->id ?></td>
-            <td><?=$record->nev ?></td>
-            <td><?=$record->leiras ?></td>
-            <td><?=$record->aktiv ?></td>
-            <td>
-                <?=anchor(base_url('campus/list/'.$record->id), 'Reszletek'); ?>
-                <?=anchor(base_url('campus/delete/'.$record->id), 'Torles'); ?>
-                <?=anchor(base_url('campus/update/'.$record->id), 'Modositas'); ?>
-            </td>
+            <td><?=$records->id ?></td>
+            <td><?=$records->title ?></td>
+            <td><?=$records->publisher ?></td>
+            <td><?=$records->description ?></td>
+            <td><?=$records->cost ?> EUR</td>
         </tr>
-        <?php endforeach; ?>
         </tbody>
     </table>
-    <p>Lekerdezett rekordok szama: <?=count($records) ?></p>
     </div>
-    <?php endif; ?>
     
 
 </body>
 </html>
+
+
+
+<!-- <h1><?=$title?></h1>
+
+<?php if($records == null || empty($records)) : ?>
+    <p>Nincs rogzitve egyetlen campus sem</p>
+<?php else: ?>
+    <?php print_r($records); ?>
+    <br>
+    <?php echo anchor(base_url('shop/list'), 'Vissza!') ?>
+<?php endif; ?> -->

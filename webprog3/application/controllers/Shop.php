@@ -1,6 +1,6 @@
 <?php
 
-class Campus extends CI_Controller
+class Shop extends CI_Controller
 {
     public function __construct(){
         parent::__construct();
@@ -10,12 +10,10 @@ class Campus extends CI_Controller
             redirect(base_url('auth'));
         }
 
-        $this->load->model('campus_model');
-
-        // var_dump($this->ion_auth); exit;
+        $this->load->model('shop_model');
     }
 
-    public function list($campusid = NULL)
+    public function list($gameid = NULL)
     {
         $errors = [];
         if($this->session->has_userdata('errors'))
@@ -25,63 +23,67 @@ class Campus extends CI_Controller
         
         $this->load->helper('url');
 
-        if($campusid == NULL)
+        if($gameid == NULL)
         {
             $view_params = [
-                'title' => 'Campusok listaja',
-                'records' => $this->campus_model->getList(),
+                'title' => 'Games',
+                'records' => $this->shop_model->getList(),
                 'errors' => $errors
             ];
     
-            $this->load->view('campus/list', $view_params);
+            $this->load->view('shop/list', $view_params);
         }
         else
         {
-            if(!is_numeric($campusid))
+            if(!is_numeric($gameid))
             {
                 show_error('Nem helyes parameterertek!');
             }
             
-            $record = $this->campus_model->getRecord($campusid);
+            $record = $this->shop_model->getRecord($gameid);
             if($record == NULL || empty($record))
             {
                 show_error('Nincs ilyen rekord!');
             }
 
             $view_params = [
-                'title' => 'Reszletes rekordadatok!',
+                'title' => 'Game description',
                 'records' => $record
             ];
 
-            $this->load->view('campus/showrecord', $view_params);
+            $this->load->view('shop/showrecord', $view_params);
         }
     }
 
     public function insert()
     {
-        $this->load->helper('url');
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('campus_nev', 'Campus neve', 'required|min_length[2]');
-        $this->form_validation->set_rules('campus_leiras', 'Campus leirasa', 'required|min_length[2]');
+        $this->form_validation->set_rules('title', 'Game title', 'required|min_length[2]');
+        $this->form_validation->set_rules('publisher', 'Game publisher', 'required|min_length[2]');
 
         if($this->form_validation->run() == TRUE)
         {
-            $nev = $this->input->post('campus_nev');
-            $leiras = !empty($this->input->post('campus_leiras')) ? $this->input->post('campus_leiras') : NULL;
-            $id = $this->campus_model->insRecord($nev, $leiras);
+            $title = $this->input->post('title');
+            $publisher = $this->input->post('publisher');
+            $description = !empty($this->input->post('description')) ? $this->input->post('description') : NULL;
+            $cost = !empty($this->input->post('cost')) ? $this->input->post('cost') : '0';
+            $id = $this->shop_model->insRecord($title, $publisher, $description, $cost);
             if($id)
             {
-                redirect(base_url('campus/list'));
+                redirect(base_url('shop/list'));
             }
             else
             {
-                show_error('Hiba a beszuras soran!');
+                show_error('Error: insertion!');
             }
         }
         else
         {
+            $view_params = [
+                'title' => 'New game'
+            ];
             $this->load->helper('form');
-            $this->load->view('campus/add');
+            $this->load->view('shop/add', $view_params);
         }
     }
 
@@ -136,42 +138,38 @@ class Campus extends CI_Controller
         }
     }
 
-    public function delete($campusid = NULL)
+    public function delete($gameid = NULL)
     {
         if(!$this->ion_auth->is_admin())
         {
-            $userdata = ['Nincs jogod a campusok torlesehez!'];
+            $userdata = ['You don\'t have permission for delete'];
             $this->session->set_userdata(['errors' => $userdata]);
-            redirect(base_url('campus/list'));
+            redirect(base_url('shop/list'));
         }
 
-        
-
-        $this->load->helper('url');
-
-        if($campusid == NULL)
+        if($gameid == NULL)
         {
-            redirect(base_url('campus/list'));
+            redirect(base_url('shop/list'));
         }
 
-        if(!is_numeric($campusid))
+        if(!is_numeric($gameid))
         {
-            redirect(base_url('campus/list'));
+            redirect(base_url('shop/list'));
         }
 
-        $record = $this->campus_model->getRecord($campusid);
+        $record = $this->shop_model->getRecord($gameid);
         if($record == NULL || empty($record))
         {
-            redirect(base_url('campus/list'));
+            redirect(base_url('shop/list'));
         }
 
-        if($this->campus_model->delRecord($campusid))
+        if($this->shop_model->delRecord($gameid))
         {
-            redirect(base_url('campus/list'));
+            redirect(base_url('shop/list'));
         }
         else
         {
-            show_error('A torles sikertelen!');
+            show_error('Error: DELETE!');
         }
     }
 

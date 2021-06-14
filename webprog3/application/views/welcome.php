@@ -10,23 +10,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title>EKE Social</title>
+    <title>Sztim</title>
 </head>
 <body>
 
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="<?=base_url('welcome/')?>">EKE Social</a>      
+      <a class="navbar-brand" href="<?=base_url('welcome')?>">Sztim</a>
     </div>
     <ul class="nav navbar-nav">
       <li><a href="<?=base_url('welcome')?>">Home</a></li>
-      <li><a href="<?=base_url('campus/list')?>">List</a></li>
-      <li><a href="<?=base_url('campus/insert')?>">Uj rekord</a></li>
+      <?php if($this->ion_auth->logged_in()): ?>
+        <li><a href="<?=base_url('shop/list')?>">Shop</a></li>
+      <li><a href="<?=base_url('welcome')?>">Wishlist</a></li>
+      <li><a href="<?=base_url('welcome')?>">Library</a></li>
+      <li><a href="<?=base_url('welcome')?>">Users</a></li>
+      <?php endif; ?>
+      
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <?php if(!$this->ion_auth->logged_in()): ?>
+      <li><a href="<?=base_url('auth/register')?>"><span class="glyphicon glyphicon-user"></span> Register</a></li>
+      <li><a href="<?=base_url('auth/login')?>"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <?php else: ?>
+        <li><a href="<?=base_url('auth/logout')?>"><span class="glyphicon glyphicon-user"></span> Logout</a></li>
+      <?php endif; ?>
     </ul>
   </div>
 </nav>
@@ -44,27 +53,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     </thead>
     <tbody>
       <tr>
-        <td>Sanyika</td>
-        <td>Sanyika</td>
-        <td>Sanyika</td>
-        <td>-</td>
-      </tr>
-      <tr>
         <td>John</td>
         <td>Doe</td>
         <td>john@example.com</td>
-        <td>-</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-        <td>-</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
         <td>-</td>
       </tr>
     </tbody>
